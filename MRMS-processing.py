@@ -253,8 +253,7 @@ def mrms_processor(file,var,loc,x20,y20):
 
 def mrms_processor2(file,var,loc,x20,y20):
     dset = nc.Dataset(file,'r')
-    dset = nc.Dataset('test-data/20190421-050000-VII.netcdf','r')
-    var = dset.variables['VII'][:,:]
+    data = dset.variables[var][:,:]
     u_lat = dset.Latitude #Upper-most latitude
     l_lon = dset.Longitude #Left-most longitude
 
@@ -266,15 +265,15 @@ def mrms_processor2(file,var,loc,x20,y20):
 
     glon,glat = np.meshgrid(lon,lat) #Creating the grid of lat and lon data points
 
-    var = var.flatten()
+    data = data.flatten()
     glon = glon.flatten()
     glat = glat.flatten()
 
-    where = (var>0)&(glon>=-103)
+    where = (data>0)&(glon>=-103)
 
     lon = glon[where]
     lat = glat[where]
-    var = var[where]
+    data = data[where]
 
     #Turning the lat,lon coordinates to geostationary projection coordinates from goes-16
     #x_sat,y_sat = g16_proj(lon,lat)
@@ -294,7 +293,7 @@ def mrms_processor2(file,var,loc,x20,y20):
 
 def driver(file,loc,var,x,y,xf,yf):
     #If there is a data file, run the procedure to find it
-    if (len(file)>0)&((var='VII')|(var='VIL')):
+    if (len(file)>0)&((var=='VII')|(var=='VIL')):
         data = mrms_processor2(file[0],var,loc,x,y)
     elif len(file)>0:
         data = mrms_processor(file[0],var,loc,x,y)
@@ -332,8 +331,8 @@ def df_maker(mesh,iso_dbz,comp_dbz,rala,vii,vil,t,t_df,xf,yf):
                          'Reflectivity_-10C':iso_dbz,
                          'MergedReflectivityQCComposite':comp_dbz,
                          'ReflectivityAtLowestAltitude':rala,
-                         'VII':,vii,
-                         'VIL':,vil})
+                         'VII':vii,
+                         'VIL':vil})
     
     return newdf.drop(columns='Dummy')
 
@@ -376,7 +375,7 @@ for i in index[1:]: #Need to skip the first one at 0000Z on the starting day
     comp_dbz_file, comp_dbz_loc = file_check(files[i],case,start,variables[2])
     rala_file, rala_loc = file_check(files[i],case,start,variables[3])
     vii_file, vii_loc = file_check(files[i],case,start,variables[4])
-    vil_file, vii_loc = file_check(files[i],case,start,variables[5])
+    vil_file, vil_loc = file_check(files[i],case,start,variables[5])
     
     print (t_df[i])
 
