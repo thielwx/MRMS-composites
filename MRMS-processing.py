@@ -75,6 +75,15 @@ def file_check(file,case,start,var):
     return fcheck,loc
 
 
+#Using the glob function to see if the people are there (VII and VIL specifically)
+def file_check2(file,case,start,var):
+    loc = '/raid/myrorss2_data/anthony.reinhart/VILVIIforKevin/2019/wdssii/'+var+'/00.50/'
+    print (loc+file)
+    fcheck = glob.glob(str(loc+file))
+    #print (fcheck)
+    return fcheck,loc
+
+
 # In[4]:
 
 
@@ -180,7 +189,7 @@ def MRMS_cluster2(x20,y20,var,lat,lon):
 
 def latlon(X,Y):    
     sat_h = 35786023.0
-    sat_lon = -70
+    sat_lon = -75
     sat_sweep = 'x'
     
     p = Proj(proj='geos', h=sat_h, lon_0=sat_lon, sweep=sat_sweep)
@@ -197,7 +206,7 @@ def latlon(X,Y):
 #Basically the inverse of the latlon function in fn_master.py
 def g16_proj(lon,lat):
     sat_h = 35786023.0
-    sat_lon = -70
+    sat_lon = -75
     sat_sweep = 'x'
     
     p = Proj(proj='geos',h=sat_h,lon_0=sat_lon,sweep=sat_sweep)
@@ -374,8 +383,8 @@ for i in index[1:]: #Need to skip the first one at 0000Z on the starting day
     iso_dbz_file, iso_dbz_loc = file_check(files[i],case,start,variables[1])
     comp_dbz_file, comp_dbz_loc = file_check(files[i],case,start,variables[2])
     rala_file, rala_loc = file_check(files[i],case,start,variables[3])
-    vii_file, vii_loc = file_check(files[i],case,start,variables[4])
-    vil_file, vil_loc = file_check(files[i],case,start,variables[5])
+    vii_file, vii_loc = file_check2(files[i],case,start,variables[4])
+    vil_file, vil_loc = file_check2(files[i],case,start,variables[5])
     
     print (t_df[i])
 
